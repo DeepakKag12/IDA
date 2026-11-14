@@ -48,7 +48,7 @@
     citecolor=black,
     urlcolor=blue!70!black,
     pdftitle={Regression Analysis - Course Project Report},
-    pdfauthor={Project Team}
+    pdfauthor={Deepak Kag, Vineet Tiwari, Rohan Dubey, Ujjwal Singh}
 }
 
 % Table & Caption Formatting
@@ -58,6 +58,7 @@
     skip=6pt
 }
 \renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{8pt}
 \setlength{\intextsep}{10pt plus 2pt minus 2pt}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 
@@ -85,57 +86,58 @@
 \begin{document}
 
 % ==============================================================================
-% FRONT PAGE
+% FRONT PAGE (FITS EXACTLY ON ONE PAGE WITHOUT OVERFLOW)
 % ==============================================================================
 \begin{titlepage}
     \centering
-    \vspace*{0.5cm}
+    \vspace*{0.2cm}
 
     {\LARGE \textbf{Regression Analysis for Establishing a Relation Between Response and Regressor Variables}\par}
-    \vspace{0.6cm}
+    \vspace{0.4cm}
     {\Large \textbf{Course Project Report}\par}
-    \vspace{0.35cm}
+    \vspace{0.25cm}
     {\small \textbf{Dataset Reference:} \url{https://www.kaggle.com/code/desalegngeb/heart-disease-predictions/input}\par}
 
-    \vspace{0.8cm}
+    \vspace{0.5cm}
     \noindent\rule{\textwidth}{0.8pt}
-    \vspace{0.6cm}
+    \vspace{0.5cm}
 
-    {\Large \textbf{Team Details}}\\[0.4cm]
-    \renewcommand{\arraystretch}{1.45}
-    \noindent
-    \begin{tabularx}{\textwidth}{@{}l X@{}}
-        \textbf{Member 1 Name:} & \hrulefill \\
-        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
-        \textbf{Member 2 Name:} & \hrulefill \\
-        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
-        \textbf{Member 3 Name:} & \hrulefill \\
-        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
-        \textbf{Member 4 Name:} & \hrulefill \\
-        \textbf{Roll No / ID:}  & \hrulefill \\
-    \end{tabularx}
-
-    \vspace{1.0cm}
-
-    {\Large \textbf{Individual Contribution Towards the Project}}\\[0.4cm]
+    {\Large \textbf{Team Details}}\\[0.3cm]
     \renewcommand{\arraystretch}{1.35}
     \noindent
-    \begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+    \begin{tabularx}{\textwidth}{@{}l L r@{}}
+        \toprule
+        \textbf{Member} & \textbf{Student Name} & \textbf{Roll Number} \\
+        \midrule
+        \textbf{Member 1} & Deepak Kag    & \texttt{S20230010069} \\
+        \textbf{Member 2} & Vineet Tiwari & \texttt{S20230010260} \\
+        \textbf{Member 3} & Rohan Dubey   & \texttt{S20230010207} \\
+        \textbf{Member 4} & Ujjwal Singh  & \texttt{S20230010245} \\
+        \bottomrule
+    \end{tabularx}
+
+    \vspace{0.7cm}
+
+    {\Large \textbf{Individual Contribution Towards the Project}}\\[0.15cm]
+    {\normalsize \textit{Equal Contribution (25\% Each) Across Code Implementation, Theory, and Reporting}}\\[0.3cm]
+    \renewcommand{\arraystretch}{1.35}
+    \noindent
+    \begin{tabularx}{\textwidth}{|p{3.8cm}|L|}
         \hline
-        \textbf{Team Member} & \textbf{Contribution / Responsibilities} \\
+        \textbf{Team Member (Share)} & \textbf{Collaborative Responsibilities and Tasks} \\
         \hline
-        \textbf{Member 1} & \vspace{0.9cm} \\
+        \textbf{Deepak Kag}\newline (25\% Equal Share) & Collaborative Base R coding of the Ordinary Least Squares (OLS) mathematical solver; theoretical formulation of linear regression assumptions; experimental analysis of resting blood pressure relationships. \\
         \hline
-        \textbf{Member 2} & \vspace{0.9cm} \\
+        \textbf{Vineet Tiwari}\newline (25\% Equal Share) & Collaborative Base R coding of the dataset pre-processing and summary statistics functions; theoretical formulation of IQR outlier bounds; experimental analysis of serum cholesterol relationships. \\
         \hline
-        \textbf{Member 3} & \vspace{0.9cm} \\
+        \textbf{Rohan Dubey}\newline (25\% Equal Share) & Collaborative Base R coding of pairwise correlation and One-Way ANOVA hypothesis testing routines; theoretical formulation of inter-attribute variance; experimental analysis of chest pain type relationships. \\
         \hline
-        \textbf{Member 4} & \vspace{0.9cm} \\
+        \textbf{Ujjwal Singh}\newline (25\% Equal Share) & Collaborative Base R coding of the Linear Probability Model and risk prediction algorithms; theoretical formulation of $R^2$ goodness-of-fit diagnostics; experimental analysis of resting ECG relationships. \\
         \hline
     \end{tabularx}
 
     \vfill
-    {\large \textbf{Date of Submission:} \underline{\hspace{5cm}}\par}
+    {\large \textbf{Date of Submission:} November 14, 2026\par}
 \end{titlepage}
 
 \setcounter{page}{1}
