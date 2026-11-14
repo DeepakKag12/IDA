@@ -231,8 +231,19 @@ cat("---------------------------------------------------------------------------
 cat("PART (a): DATA PRE-PROCESSING\n")
 cat("--------------------------------------------------------------------------------\n")
 
-# Load heart.csv
-data <- read.csv("heart.csv", stringsAsFactors = FALSE)
+# Load heart.csv (Auto-detects location so it loads in RStudio even if working directory is set to Documents ~)
+csv_candidates <- c(
+  "heart.csv",
+  "C:/Users/deepak kag/OneDrive/Desktop/IDA/heart.csv",
+  file.path(getwd(), "heart.csv")
+)
+csv_file <- csv_candidates[file.exists(csv_candidates)][1]
+
+if (is.na(csv_file) || !file.exists(csv_file)) {
+  stop("heart.csv not found! Please click in RStudio menu: Session -> Set Working Directory -> To Source File Location")
+}
+
+data <- read.csv(csv_file, stringsAsFactors = FALSE)
 colnames(data) <- tolower(trimws(colnames(data)))
 
 cat("Dataset loaded successfully.\n")
@@ -442,10 +453,10 @@ for (p in new_patients) {
   
   # Combined MLR prediction
   comb_pred <- mlr_model$coefficients["Intercept"] + 
-               mlr_model$coefficients["trestbps"] * p$trestbps + 
-               mlr_model$coefficients["chol"] * p$chol + 
-               mlr_model$coefficients["cp"] * p$cp + 
-               mlr_model$coefficients["restecg"] * p$restecg
+    mlr_model$coefficients["trestbps"] * p$trestbps + 
+    mlr_model$coefficients["chol"] * p$chol + 
+    mlr_model$coefficients["cp"] * p$cp + 
+    mlr_model$coefficients["restecg"] * p$restecg
   comb_chance <- ifelse(comb_pred >= 0.5, "HIGH Chance", "LESS Chance")
   cat(sprintf("    - COMBINED (All 4): Predicted Score = %.4f (%.2f%%) -> %s of heart attack\n",
               comb_pred, comb_pred * 100, comb_chance))
