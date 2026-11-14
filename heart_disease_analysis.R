@@ -484,10 +484,10 @@ cat("4. Linear Probability Model predictions clearly discriminate between Low Ri
 cat("   LESS chance), Moderate Risk (Score = 57.96%, HIGH chance), and High Risk (Score = 95.01%, HIGH chance).\n")
 
 # ------------------------------------------------------------------------------
-# STEP 6: BASE R GRAPHICAL VISUALIZATIONS (ZERO EXTERNAL PACKAGES)
+# STEP 6: BASE R GRAPHICAL VISUALIZATIONS (DISPLAYED ON SCREEN / RSTUDIO)
 # ------------------------------------------------------------------------------
 cat("\n--------------------------------------------------------------------------------\n")
-cat("STEP 6: GENERATING PUBLICATION-QUALITY BASE R VISUALIZATIONS\n")
+cat("STEP 6: RENDERING GRAPHICAL VISUALIZATIONS (RSTUDIO PLOTS PANE)\n")
 cat("--------------------------------------------------------------------------------\n")
 
 # Function to draw Plot 1: 4-Panel Simple Linear Regression Fits
@@ -564,25 +564,15 @@ draw_risk_predictions <- function() {
   grid(nx = NA, ny = NULL, col = "gray85")
 }
 
-# Generate and save PNG image files (Always created)
-png("plot1_slr_fits.png", width = 1000, height = 800, res = 120)
-draw_slr_fits()
-invisible(dev.off())
-cat("Saved: plot1_slr_fits.png (4-Panel Simple Linear Regression Fits)\n")
-
-png("plot2_r2_comparison.png", width = 800, height = 600, res = 120)
-draw_r2_comparison()
-invisible(dev.off())
-cat("Saved: plot2_r2_comparison.png (R-squared Diagnostics Comparison)\n")
-
-png("plot3_patient_predictions.png", width = 800, height = 600, res = 120)
-draw_risk_predictions()
-invisible(dev.off())
-cat("Saved: plot3_patient_predictions.png (Clinical Risk Predictions on New Patients)\n")
-
-# If running interactively inside RStudio or R GUI, also render to screen Plots tab
-if (interactive()) {
+# Render all plots directly to the active screen device in RStudio / interactive R
+# No image files are written to disk. Use the back/forward arrows in RStudio's Plots pane to toggle between them.
+if (interactive() || Sys.getenv("RSTUDIO") == "1") {
   draw_slr_fits()
+  draw_r2_comparison()
+  draw_risk_predictions()
+  cat("Graphs rendered successfully in the RStudio 'Plots' pane.\n")
+} else {
+  cat("Graphs are ready to render interactively in RStudio's 'Plots' pane upon running.\n")
 }
 
 cat("\n================================================================================\n")
