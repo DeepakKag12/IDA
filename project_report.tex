@@ -1,0 +1,419 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==============================================================================
+% PACKAGES & SYMMETRICAL PAGE GEOMETRY
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Strictly symmetrical left and right margins on A4 (210mm x 297mm)
+\usepackage[
+    a4paper,
+    twoside=false,
+    left=2.2cm,
+    right=2.2cm,
+    top=2.2cm,
+    bottom=2.2cm,
+    headheight=15pt,
+    headsep=10pt,
+    footskip=25pt
+]{geometry}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{hyperref}
+
+% Prevent LaTeX from stretching vertical space between blocks
+\raggedbottom
+
+% Column types for full-width symmetrical tables
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% Hyperlink Styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue!70!black,
+    pdftitle={Regression Analysis - Course Project Report},
+    pdfauthor={Project Team}
+}
+
+% Table & Caption Formatting
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    skip=6pt
+}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+
+% Header & Footer Configuration
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Regression Analysis: Response \& Regressor Variables}}
+\fancyhead[R]{\small\textit{Course Project Report}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Compact Section Spacing (Prevents large vertical gaps)
+\titlespacing*{\section}{0pt}{12pt plus 2pt minus 2pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt plus 2pt minus 2pt}{4pt}
+\titlespacing*{\paragraph}{0pt}{6pt plus 1pt minus 1pt}{1em}
+
+% Flush-left lists for symmetrical left/right visual padding
+\setlist[itemize]{leftmargin=*, topsep=3pt, itemsep=2pt, parsep=0pt}
+\setlist[enumerate]{leftmargin=*, topsep=3pt, itemsep=3pt, parsep=0pt}
+
+% Paragraph Spacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4em}
+
+\begin{document}
+
+% ==============================================================================
+% FRONT PAGE
+% ==============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+
+    {\LARGE \textbf{Regression Analysis for Establishing a Relation Between Response and Regressor Variables}\par}
+    \vspace{0.6cm}
+    {\Large \textbf{Course Project Report}\par}
+    \vspace{0.35cm}
+    {\small \textbf{Dataset Reference:} \url{https://www.kaggle.com/code/desalegngeb/heart-disease-predictions/input}\par}
+
+    \vspace{0.8cm}
+    \noindent\rule{\textwidth}{0.8pt}
+    \vspace{0.6cm}
+
+    {\Large \textbf{Team Details}}\\[0.4cm]
+    \renewcommand{\arraystretch}{1.45}
+    \noindent
+    \begin{tabularx}{\textwidth}{@{}l X@{}}
+        \textbf{Member 1 Name:} & \hrulefill \\
+        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
+        \textbf{Member 2 Name:} & \hrulefill \\
+        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
+        \textbf{Member 3 Name:} & \hrulefill \\
+        \textbf{Roll No / ID:}  & \hrulefill \\[0.15cm]
+        \textbf{Member 4 Name:} & \hrulefill \\
+        \textbf{Roll No / ID:}  & \hrulefill \\
+    \end{tabularx}
+
+    \vspace{1.0cm}
+
+    {\Large \textbf{Individual Contribution Towards the Project}}\\[0.4cm]
+    \renewcommand{\arraystretch}{1.35}
+    \noindent
+    \begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+        \hline
+        \textbf{Team Member} & \textbf{Contribution / Responsibilities} \\
+        \hline
+        \textbf{Member 1} & \vspace{0.9cm} \\
+        \hline
+        \textbf{Member 2} & \vspace{0.9cm} \\
+        \hline
+        \textbf{Member 3} & \vspace{0.9cm} \\
+        \hline
+        \textbf{Member 4} & \vspace{0.9cm} \\
+        \hline
+    \end{tabularx}
+
+    \vfill
+    {\large \textbf{Date of Submission:} \underline{\hspace{5cm}}\par}
+\end{titlepage}
+
+\setcounter{page}{1}
+
+% ==============================================================================
+% SECTION 1: UNDERSTANDING THE THEORY
+% ==============================================================================
+\section{Understanding the Theory to Solve the Project Problem}
+
+The primary goal of regression analysis is to model, estimate, and interpret the relationship between a dependent response variable $Y$ and one or more independent regressor variables $X$.
+
+\subsection{Ordinary Least Squares (OLS) Regression}
+Given a sample of $n$ observations $\{(x_i, y_i)\}_{i=1}^n$, the simple linear regression model is expressed as:
+\begin{equation}
+    y_i = \beta_0 + \beta_1 x_i + \varepsilon_i
+\end{equation}
+where $\beta_0$ represents the intercept, $\beta_1$ represents the slope parameter, and $\varepsilon_i$ is an unobserved random disturbance term satisfying the Gauss--Markov assumptions:
+\begin{enumerate}
+    \item $\mathbb{E}[\varepsilon_i \mid x_i] = 0$ (Zero conditional mean).
+    \item $\text{Var}(\varepsilon_i \mid x_i) = \sigma^2 < \infty$ (Constant error variance / homoscedasticity).
+    \item $\text{Cov}(\varepsilon_i, \varepsilon_j) = 0 \quad \forall\, i \neq j$ (Uncorrelated observations).
+\end{enumerate}
+
+The parameters are estimated by minimizing the Residual Sum of Squares ($SS_{\text{res}}$):
+\begin{equation}
+    S(\beta_0, \beta_1) = \sum_{i=1}^n \varepsilon_i^2 = \sum_{i=1}^n \left(y_i - \beta_0 - \beta_1 x_i\right)^2
+\end{equation}
+Differentiating $S(\beta_0, \beta_1)$ with respect to $\beta_0$ and $\beta_1$ and equating the partial derivatives to zero yields the normal equations:
+\begin{align}
+    \frac{\partial S}{\partial \beta_0} &= -2 \sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i) = 0 \implies \sum_{i=1}^n y_i = n \beta_0 + \beta_1 \sum_{i=1}^n x_i \\
+    \frac{\partial S}{\partial \beta_1} &= -2 \sum_{i=1}^n x_i (y_i - \beta_0 - \beta_1 x_i) = 0 \implies \sum_{i=1}^n x_i y_i = \beta_0 \sum_{i=1}^n x_i + \beta_1 \sum_{i=1}^n x_i^2
+\end{align}
+Solving these equations analytically yields the closed-form OLS estimators:
+\begin{align}
+    \hat{\beta}_1 &= \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)} = \frac{S_{xy}}{S_{xx}} \\
+    \hat{\beta}_0 &= \bar{y} - \hat{\beta}_1 \bar{x}
+\end{align}
+
+\subsection{Matrix Formulation of Multiple Linear Regression}
+When considering $p$ regressors simultaneously, the system is expressed in matrix algebra:
+\begin{equation}
+    \mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}
+\end{equation}
+where $\mathbf{y} \in \mathbb{R}^{n \times 1}$ is the response vector, $\mathbf{X} \in \mathbb{R}^{n \times (p+1)}$ is the design matrix with a leading column of ones, $\boldsymbol{\beta} \in \mathbb{R}^{(p+1) \times 1}$ is the coefficient vector, and $\boldsymbol{\varepsilon} \in \mathbb{R}^{n \times 1}$ is the error vector.
+
+Minimizing the quadratic error function $S(\boldsymbol{\beta}) = (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^T(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})$ gives the matrix normal equations:
+\begin{equation}
+    \mathbf{X}^T \mathbf{X} \boldsymbol{\beta} = \mathbf{X}^T \mathbf{y} \implies \hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+\end{equation}
+The variance--covariance matrix of the estimators is:
+\begin{equation}
+    \text{Var}(\hat{\boldsymbol{\beta}}) = \hat{\sigma}^2 (\mathbf{X}^T \mathbf{X})^{-1}, \quad \text{where } \hat{\sigma}^2 = \frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{n - p - 1}
+\end{equation}
+The standard error of each estimator is $SE(\hat{\beta}_j) = \sqrt{[\text{Var}(\hat{\boldsymbol{\beta}})]_{jj}}$, which enables statistical hypothesis testing via the Student's $t$-statistic: $t_j = \hat{\beta}_j / SE(\hat{\beta}_j)$.
+
+\subsection{The Linear Probability Model (LPM)}
+Because the response variable is binary ($Y \in \{0, 1\}$, where $1$ denotes presence of heart disease and $0$ denotes absence), the regression conditional expectation corresponds directly to the conditional probability of disease occurrence:
+\begin{equation}
+    \mathbb{E}[Y \mid \mathbf{X}] = 1 \cdot P(Y = 1 \mid \mathbf{X}) + 0 \cdot P(Y = 0 \mid \mathbf{X}) = P(\text{Heart Attack} = 1 \mid \mathbf{X})
+\end{equation}
+A clinical decision boundary at threshold $\tau = 0.50$ is applied:
+\begin{equation}
+    \text{Clinical Risk Classification} =
+    \begin{cases}
+        \text{High Chance of Heart Attack}, & \text{if } \hat{y} \ge 0.50 \\
+        \text{Less Chance of Heart Attack}, & \text{if } \hat{y} < 0.50
+    \end{cases}
+\end{equation}
+
+\subsection{Pearson Correlation Coefficient (\texorpdfstring{$r$}{r})}
+The linear association between continuous clinical pairs is quantified by normalizing their sample covariance:
+\begin{equation}
+    r_{xy} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2 \sum_{i=1}^n (y_i - \bar{y})^2}} = \frac{S_{xy}}{\sqrt{S_{xx} S_{yy}}}
+\end{equation}
+
+\subsection{Coefficient of Determination (\texorpdfstring{$R^2$}{R2} and Adjusted \texorpdfstring{$R^2$}{R2})}
+The total variability in the response variable is partitioned into explained and unexplained components:
+\begin{equation}
+    SS_{\text{tot}} = SS_{\text{reg}} + SS_{\text{res}} \implies \sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (\hat{y}_i - \bar{y})^2 + \sum_{i=1}^n (y_i - \hat{y}_i)^2
+\end{equation}
+The Coefficient of Determination ($R^2$) measures the proportion of total variance explained by the model:
+\begin{equation}
+    R^2 = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}} = 1 - \frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{\sum_{i=1}^n (y_i - \bar{y})^2}
+\end{equation}
+To penalize for the addition of non-informative regressors, the Adjusted $R^2$ incorporates degrees of freedom:
+\begin{equation}
+    R^2_{\text{adj}} = 1 - \left[ \frac{(1 - R^2)(n - 1)}{n - p - 1} \right]
+\end{equation}
+Overall model significance is tested using the global $F$-statistic:
+\begin{equation}
+    F = \frac{SS_{\text{reg}} / p}{SS_{\text{res}} / (n - p - 1)} = \frac{R^2 / p}{(1 - R^2) / (n - p - 1)} \sim F(p, n - p - 1)
+\end{equation}
+
+% ==============================================================================
+% SECTION 2: IMPLEMENTATION EXPLANATION
+% ==============================================================================
+\section{Implementation Architecture in Base R}
+
+As instructed, the project implementation was carried out exclusively in an R script (\texttt{heart\_disease\_analysis.R}) using pure mathematical operations from first principles without relying on high-level modeling packages (such as \texttt{caret}, \texttt{tidyverse}, or third-party statistical toolboxes).
+
+\subsection{Algorithmic Structure and Methodology}
+The custom implementation follows a five-stage modular mathematical architecture:
+
+\begin{enumerate}
+    \item \textbf{Descriptive and Inferential Primitives from Scratch:}
+    \begin{itemize}
+        \item Sample mean $\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$ and sample variance $s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$.
+        \item Sample covariance $S_{xy} = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$ and Pearson correlation $r = S_{xy} / (s_x s_y)$.
+        \item Percentiles and Interquartile Range ($\text{IQR} = Q_3 - Q_1$) implemented via ordered positional interpolation.
+    \end{itemize}
+
+    \item \textbf{One-Way ANOVA from Scratch:}
+    \begin{itemize}
+        \item Total sum of squares is partitioned into between-group ($SS_{\text{between}}$) and within-group ($SS_{\text{within}}$) sums of squares across the $K$ categories of chest pain (\texttt{cp}) and resting ECG (\texttt{restecg}).
+        \item The test statistic $F = MS_{\text{between}} / MS_{\text{within}}$ is calculated alongside exact $p$-values to evaluate attribute associations.
+    \end{itemize}
+
+    \item \textbf{Analytical Simple Linear Regression Solver:}
+    \begin{itemize}
+        \item Computes $\hat{\beta}_1 = S_{xy}/S_{xx}$ and $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}$ directly from scalar vector operations.
+        \item Generates fitted values $\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i$, residual vectors $e_i = y_i - \hat{y}_i$, residual variance $s^2 = \sum e_i^2 / (n - 2)$, standard errors $SE(\hat{\beta}_1) = \sqrt{s^2 / S_{xx}}$, $t$-statistics, and exact two-tailed $p$-values.
+    \end{itemize}
+
+    \item \textbf{Matrix OLS Solver for Multiple Regressors:}
+    \begin{itemize}
+        \item Constructs the full design matrix $\mathbf{X}$ by appending an initial column vector of ones $\mathbf{1}_n$ to the feature matrix.
+        \item Solves the normal equations through direct matrix operations $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} (\mathbf{X}^T \mathbf{y})$ using base matrix transpose \texttt{t()}, matrix multiplication \texttt{\%*\%}, and matrix inversion \texttt{solve()}.
+        \item Computes the variance--covariance matrix $\text{Var}(\hat{\boldsymbol{\beta}}) = \hat{\sigma}^2 (\mathbf{X}^T \mathbf{X})^{-1}$, extracting diagonal standard errors, $t$-ratios, and model $F$-statistics.
+    \end{itemize}
+
+    \item \textbf{Clinical Inference Engine on New Patient Profiles:}
+    \begin{itemize}
+        \item Evaluates new vector inputs through linear dot products $\hat{y}_{\text{new}} = \mathbf{x}_{\text{new}}^T \hat{\boldsymbol{\beta}}$.
+        \item Implements the conditional threshold function to categorize each prediction as \textbf{High Chance} ($\hat{y}_{\text{new}} \ge 0.50$) or \textbf{Less Chance} ($\hat{y}_{\text{new}} < 0.50$) of heart attack.
+    \end{itemize}
+\end{enumerate}
+
+% ==============================================================================
+% SECTION 3: EXPERIMENTAL RESULTS
+% ==============================================================================
+\section{Experimental Results}
+
+\subsection{Data Pre-Processing}
+The provided Cleveland dataset (\texttt{heart.csv}) was pre-processed through the following validation steps:
+\begin{itemize}
+    \item \textbf{Missing Value Audit:} Complete inspection confirmed zero missing or null entries across all 14 clinical attributes.
+    \item \textbf{Duplicate Detection and Removal:} One duplicate observation (row 164 for a 38-year-old male) was identified and removed, yielding a final analytical sample of $N = 302$ unique patient records.
+    \item \textbf{Target Distribution:} The binary response variable is balanced across cohorts: Class 1 (High Chance of Heart Attack) comprises $164$ patients ($54.30\%$), and Class 0 (Less Chance of Heart Attack) comprises $138$ patients ($45.70\%$).
+    \item \textbf{Outlier Analysis via the $1.5 \times \text{IQR}$ Rule:}
+    \begin{itemize}
+        \item \texttt{trestbps}: $Q_1 = 120.0$, $Q_3 = 140.0$, $\text{IQR} = 20.0$, Upper bound $= 170.0\text{ mm Hg}$. Nine acute hypertensive cases ($172\text{--}200\text{ mm Hg}$) were identified and preserved as valid clinical presentations.
+        \item \texttt{chol}: $Q_1 = 211.0$, $Q_3 = 274.8$, $\text{IQR} = 63.8$, Upper bound $= 370.4\text{ mg/dL}$. Five severe hypercholesterolemia records ($394\text{--}564\text{ mg/dL}$) were confirmed and retained.
+    \end{itemize}
+\end{itemize}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Summary Statistics of the Four Selected Clinical Attributes ($N = 302$)}
+    \label{tab:summary_stats}
+    \small
+    \begin{tabularx}{\textwidth}{@{}l R R R R R R@{}}
+        \toprule
+        \textbf{Clinical Attribute} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Min} & \textbf{Median} & \textbf{Max} & \textbf{Outliers} \\
+        \midrule
+        \texttt{trestbps} (Resting BP, mm Hg) & 131.60 & 17.56 & 94.00  & 130.00 & 200.00 & 9 \\
+        \texttt{chol} (Cholesterol, mg/dL)    & 246.50 & 51.75 & 126.00 & 240.50 & 564.00 & 5 \\
+        \texttt{cp} (Chest Pain Type, 0--3)   & 0.96   & 1.03  & 0.00   & 1.00   & 3.00   & 0 \\
+        \texttt{restecg} (Resting ECG, 0--2)  & 0.53   & 0.53  & 0.00   & 1.00   & 2.00   & 0 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Relation Between Each Attribute}
+The pairwise Pearson correlation matrix computed from first principles is presented in Table~\ref{tab:corr_matrix}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Pearson Correlation Matrix for the Four Selected Clinical Attributes}
+    \label{tab:corr_matrix}
+    \small
+    \begin{tabularx}{\textwidth}{@{}l R R R R@{}}
+        \toprule
+        \textbf{Attribute} & \texttt{trestbps} & \texttt{chol} & \texttt{cp} & \texttt{restecg} \\
+        \midrule
+        \texttt{trestbps} &  1.0000 &  0.1253 &  0.0465 & -0.1154 \\
+        \texttt{chol}     &  0.1253 &  1.0000 & -0.0727 & -0.1476 \\
+        \texttt{cp}       &  0.0465 & -0.0727 &  1.0000 &  0.0416 \\
+        \texttt{restecg}  & -0.1154 & -0.1476 &  0.0416 &  1.0000 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Pairwise Hypothesis Tests and Findings:}
+\begin{enumerate}
+    \item \textbf{\texttt{trestbps} vs.\ \texttt{chol} ($r = +0.1253,\ t = 2.1867,\ p = 0.0295$):} Statistically significant positive correlation ($p < 0.05$). Elevated serum cholesterol correlates with increased vascular resistance and resting systolic blood pressure.
+    \item \textbf{\texttt{cp} vs.\ \texttt{trestbps} (ANOVA $F = 2.9308,\ p = 0.0339$):} Statistically significant difference in mean resting blood pressure across angina classifications.
+    \item \textbf{\texttt{restecg} vs.\ \texttt{trestbps} (ANOVA $F = 3.6256,\ p = 0.0278$):} Statistically significant association; left ventricular hypertrophy associates with higher resting blood pressure.
+    \item \textbf{\texttt{restecg} vs.\ \texttt{chol} (ANOVA $F = 4.5185,\ p = 0.0117$):} Statistically significant difference in serum cholesterol concentrations across resting ECG categories.
+    \item \textbf{\texttt{cp} vs.\ \texttt{chol} ($p = 0.6346$) and \texttt{cp} vs.\ \texttt{restecg} ($p = 0.1514$):} Not statistically significant at $\alpha = 0.05$, confirming that chest pain symptoms manifest independently of baseline cholesterol or resting ECG wave abnormalities.
+\end{enumerate}
+
+\subsection{Simple Linear Regression Analysis \& Prediction on New Values}
+The fitted Simple Linear Regression (SLR) models for each individual attribute are:
+\begin{align}
+    \text{SLR}(\texttt{trestbps}): \quad &\widehat{\text{Target}} = 1.08991 - 0.00416 \cdot \texttt{trestbps} && (p = 0.0109) \\
+    \text{SLR}(\texttt{chol}): \quad     &\widehat{\text{Target}} = 0.73659 - 0.00079 \cdot \texttt{chol}     && (p = 0.1580) \\
+    \text{SLR}(\texttt{cp}): \quad       &\widehat{\text{Target}} = 0.34175 + 0.20890 \cdot \texttt{cp}       && (p = 3.55 \times 10^{-15}) \\
+    \text{SLR}(\texttt{restecg}): \quad  &\widehat{\text{Target}} = 0.47569 + 0.12794 \cdot \texttt{restecg}  && (p = 0.0190)
+\end{align}
+
+The synthesized Multiple Linear Regression (MLR) equation incorporating all four regressors simultaneously is:
+\begin{equation}
+    \widehat{\text{Target}} = 0.90446 - 0.00435 \cdot \texttt{trestbps} - 0.00016 \cdot \texttt{chol} + 0.20982 \cdot \texttt{cp} + 0.09176 \cdot \texttt{restecg}
+\end{equation}
+
+\paragraph{Evaluation on New Patient Profiles (Decision Threshold $\tau = 0.50$):}
+Three representative clinical cohorts were evaluated across the fitted SLR and MLR equations, as summarized in Table~\ref{tab:predictions}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Predictions and Risk Classifications for New Patient Profiles}
+    \label{tab:predictions}
+    \small
+    \begin{tabularx}{\textwidth}{@{}p{5.2cm} l C R@{}}
+        \toprule
+        \textbf{Patient Cohort \& Vitals} & \textbf{Model Applied} & \textbf{Predicted Score ($\hat{Y}$)} & \textbf{Clinical Decision} \\
+        \midrule
+        \multirow{3}{5.2cm}{\textbf{Patient 1 (Low Risk)}\\ \texttt{trestbps}=110, \texttt{chol}=180\\ \texttt{cp}=0, \texttt{restecg}=0}
+            & SLR ($\texttt{cp} = 0$)      & 0.3418 & LESS Chance \\
+            & SLR ($\texttt{restecg} = 0$) & 0.4757 & LESS Chance \\
+            & \textbf{Combined MLR}        & \textbf{0.3971} & \textbf{LESS Chance (39.71\%)} \\
+        \midrule
+        \multirow{3}{5.2cm}{\textbf{Patient 2 (Moderate Risk)}\\ \texttt{trestbps}=135, \texttt{chol}=245\\ \texttt{cp}=1, \texttt{restecg}=1}
+            & SLR ($\texttt{cp} = 1$)      & 0.5507 & HIGH Chance \\
+            & SLR ($\texttt{restecg} = 1$) & 0.6036 & HIGH Chance \\
+            & \textbf{Combined MLR}        & \textbf{0.5796} & \textbf{HIGH Chance (57.96\%)} \\
+        \midrule
+        \multirow{3}{5.2cm}{\textbf{Patient 3 (High Risk)}\\ \texttt{trestbps}=165, \texttt{chol}=310\\ \texttt{cp}=3, \texttt{restecg}=2}
+            & SLR ($\texttt{cp} = 3$)      & 0.9685 & HIGH Chance \\
+            & SLR ($\texttt{restecg} = 2$) & 0.7316 & HIGH Chance \\
+            & \textbf{Combined MLR}        & \textbf{0.9501} & \textbf{HIGH Chance (95.01\%)} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Calculation of \texorpdfstring{$R^2$}{R2} Values and Conclusions}
+Table~\ref{tab:goodness_of_fit} compares the goodness-of-fit and diagnostic metrics across all univariate and multivariate specifications.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Goodness-of-Fit and Diagnostic Metrics Across All Fitted Models}
+    \label{tab:goodness_of_fit}
+    \small
+    \begin{tabularx}{\textwidth}{@{}l C C C C R@{}}
+        \toprule
+        \textbf{Model Specification} & \textbf{$R^2$} & \textbf{Adj.\ $R^2$} & \textbf{RMSE} & \textbf{$p$-value} & \textbf{Significance} \\
+        \midrule
+        SLR: $\text{Target} \sim \texttt{cp}$       & 0.18669 & 0.18398 & 0.44924 & $3.55 \times 10^{-15}$ & Significant ($p < 0.05$) \\
+        SLR: $\text{Target} \sim \texttt{trestbps}$ & 0.02139 & 0.01813 & 0.49279 & $1.09 \times 10^{-2}$  & Significant ($p < 0.05$) \\
+        SLR: $\text{Target} \sim \texttt{restecg}$  & 0.01819 & 0.01492 & 0.49359 & $1.90 \times 10^{-2}$  & Significant ($p < 0.05$) \\
+        SLR: $\text{Target} \sim \texttt{chol}$     & 0.00663 & 0.00332 & 0.49649 & $0.1580$               & Not Significant \\
+        \midrule
+        \textbf{MLR: All 4 Attributes}              & \textbf{0.22431} & \textbf{0.21387} & \textbf{0.43873} & $\mathbf{1.44 \times 10^{-15}}$ & \textbf{Highly Significant} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\paragraph{Key Conclusions:}
+\begin{enumerate}
+    \item \textbf{Dominant Single Predictor:} Chest pain type (\texttt{cp}) is the strongest individual regressor, explaining $18.67\%$ of the total variance in heart attack diagnosis by itself ($p = 3.55 \times 10^{-15}$). Each unit increase in angina classification increases the predicted probability of heart disease by $+20.89\%$.
+    \item \textbf{Limitations of Isolated Laboratory Markers:} Continuous vitals such as resting blood pressure ($R^2 = 2.14\%$) and serum cholesterol ($R^2 = 0.66\%$) explain minimal variance in isolation; serum cholesterol alone fails to achieve statistical significance ($p = 0.1580$).
+    \item \textbf{Multivariate Superiority:} Combining all four clinical attributes in a Multiple Linear Regression framework increases the explained variance to $R^2 = 22.43\%$ (Adjusted $R^2 = 21.39\%$), yielding the lowest overall prediction error ($\text{RMSE} = 0.43873$) and high global significance ($p = 1.44 \times 10^{-15}$).
+    \item \textbf{Risk Discrimination on New Profiles:} The synthesized Linear Probability Model provides clear clinical separation across risk profiles:
+    \begin{itemize}
+        \item \textbf{Patient 1 (Low Risk Profile):} $\hat{Y} = 39.71\% < 50\% \implies$ \textbf{Less Chance of Heart Attack}.
+        \item \textbf{Patient 2 (Moderate Risk Profile):} $\hat{Y} = 57.96\% \ge 50\% \implies$ \textbf{High Chance of Heart Attack}.
+        \item \textbf{Patient 3 (High Risk Profile):} $\hat{Y} = 95.01\% \ge 50\% \implies$ \textbf{High Chance of Heart Attack}.
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
