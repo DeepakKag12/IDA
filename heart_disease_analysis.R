@@ -483,6 +483,108 @@ cat("   provide significantly superior risk discrimination compared to isolated 
 cat("4. Linear Probability Model predictions clearly discriminate between Low Risk (Score = 39.71%,\n")
 cat("   LESS chance), Moderate Risk (Score = 57.96%, HIGH chance), and High Risk (Score = 95.01%, HIGH chance).\n")
 
+# ------------------------------------------------------------------------------
+# STEP 6: BASE R GRAPHICAL VISUALIZATIONS (ZERO EXTERNAL PACKAGES)
+# ------------------------------------------------------------------------------
+cat("\n--------------------------------------------------------------------------------\n")
+cat("STEP 6: GENERATING PUBLICATION-QUALITY BASE R VISUALIZATIONS\n")
+cat("--------------------------------------------------------------------------------\n")
+
+# Function to draw Plot 1: 4-Panel Simple Linear Regression Fits
+draw_slr_fits <- function() {
+  par(mfrow = c(2, 2), mar = c(4.5, 4.5, 3, 1), oma = c(0, 0, 2.5, 0))
+  
+  # 1. trestbps
+  plot(data$trestbps, data$target, pch = 16, col = rgb(0.2, 0.4, 0.8, 0.45),
+       xlab = "Resting Blood Pressure (mm Hg)", ylab = "Target (0 = Less, 1 = High)",
+       main = "Target ~ trestbps (R2 = 2.14%, p = 0.0109)", cex.main = 0.95)
+  abline(a = slr_models$trestbps$beta0, b = slr_models$trestbps$beta1, col = "firebrick", lwd = 2.5)
+  grid(col = "gray85")
+  
+  # 2. chol
+  plot(data$chol, data$target, pch = 16, col = rgb(0.2, 0.4, 0.8, 0.45),
+       xlab = "Serum Cholesterol (mg/dL)", ylab = "Target (0 = Less, 1 = High)",
+       main = "Target ~ chol (R2 = 0.66%, p = 0.1580)", cex.main = 0.95)
+  abline(a = slr_models$chol$beta0, b = slr_models$chol$beta1, col = "firebrick", lwd = 2.5)
+  grid(col = "gray85")
+  
+  # 3. cp (with slight jitter for discrete visibility)
+  plot(jitter(data$cp, amount = 0.08), data$target, pch = 16, col = rgb(0.1, 0.6, 0.2, 0.45),
+       xlab = "Chest Pain Type (0: Typical, 1: Atypical, 2: Non-anginal, 3: Asymptomatic)",
+       ylab = "Target (0 = Less, 1 = High)",
+       main = "Target ~ cp (R2 = 18.67%, p = 3.55e-15 - Strongest)", cex.main = 0.95)
+  abline(a = slr_models$cp$beta0, b = slr_models$cp$beta1, col = "darkgreen", lwd = 2.5)
+  grid(col = "gray85")
+  
+  # 4. restecg (with jitter)
+  plot(jitter(data$restecg, amount = 0.05), data$target, pch = 16, col = rgb(0.6, 0.2, 0.7, 0.45),
+       xlab = "Resting ECG Results (0: Normal, 1: ST-T wave, 2: LVH)",
+       ylab = "Target (0 = Less, 1 = High)",
+       main = "Target ~ restecg (R2 = 1.82%, p = 0.0190)", cex.main = 0.95)
+  abline(a = slr_models$restecg$beta0, b = slr_models$restecg$beta1, col = "purple", lwd = 2.5)
+  grid(col = "gray85")
+  
+  mtext("Simple Linear Regression Models with OLS Fitted Lines", outer = TRUE, cex = 1.2, font = 2)
+}
+
+# Function to draw Plot 2: Model Comparison (R-squared Diagnostics)
+draw_r2_comparison <- function() {
+  par(mar = c(5, 9, 4, 2))
+  r2_pct <- c(slr_models$chol$r2, slr_models$restecg$r2, slr_models$trestbps$r2, 
+              slr_models$cp$r2, mlr_model$r2) * 100
+  names(r2_pct) <- c("SLR: chol\n(0.66%)", "SLR: restecg\n(1.82%)", 
+                     "SLR: trestbps\n(2.14%)", "SLR: cp\n(18.67%)", 
+                     "MLR: All 4 Attributes\n(22.43%)")
+  bar_cols <- c("#90caf9", "#90caf9", "#90caf9", "#66bb6a", "#ffa726")
+  
+  bp <- barplot(r2_pct, horiz = TRUE, col = bar_cols, border = "gray30",
+                xlab = "Variance Explained (R-squared %)", xlim = c(0, 27),
+                main = "Model Comparison: Explained Variance (R2 Diagnostics)", las = 1)
+  text(x = r2_pct + 1.2, y = bp, labels = sprintf("%.2f%%", r2_pct), font = 2, cex = 0.9)
+  grid(nx = NULL, ny = NA, col = "gray85")
+}
+
+# Function to draw Plot 3: Clinical Risk Classification on New Patient Profiles
+draw_risk_predictions <- function() {
+  par(mar = c(5, 5, 4, 2))
+  scores <- c(39.71, 57.96, 95.01)
+  names(scores) <- c("Patient 1\n(Low Risk Profile)", 
+                     "Patient 2\n(Moderate Risk Profile)", 
+                     "Patient 3\n(High Risk Profile)")
+  bar_cols <- c("#4caf50", "#ff9800", "#f44336")
+  
+  bp3 <- barplot(scores, col = bar_cols, border = "gray30", ylim = c(0, 115),
+                 ylab = "Predicted Heart Attack Probability (%)",
+                 main = "Linear Probability Model Risk Classification on New Patients", las = 1)
+  abline(h = 50, col = "darkred", lty = 2, lwd = 2)
+  text(x = 1.5, y = 53.5, "Clinical Decision Boundary (Threshold = 50%)", col = "darkred", font = 2, cex = 0.9)
+  text(x = bp3, y = scores + 5, 
+       labels = paste0(round(scores, 1), "%\n", c("LESS Chance", "HIGH Chance", "HIGH Chance")), 
+       font = 2, cex = 0.85)
+  grid(nx = NA, ny = NULL, col = "gray85")
+}
+
+# Generate and save PNG image files (Always created)
+png("plot1_slr_fits.png", width = 1000, height = 800, res = 120)
+draw_slr_fits()
+invisible(dev.off())
+cat("Saved: plot1_slr_fits.png (4-Panel Simple Linear Regression Fits)\n")
+
+png("plot2_r2_comparison.png", width = 800, height = 600, res = 120)
+draw_r2_comparison()
+invisible(dev.off())
+cat("Saved: plot2_r2_comparison.png (R-squared Diagnostics Comparison)\n")
+
+png("plot3_patient_predictions.png", width = 800, height = 600, res = 120)
+draw_risk_predictions()
+invisible(dev.off())
+cat("Saved: plot3_patient_predictions.png (Clinical Risk Predictions on New Patients)\n")
+
+# If running interactively inside RStudio or R GUI, also render to screen Plots tab
+if (interactive()) {
+  draw_slr_fits()
+}
+
 cat("\n================================================================================\n")
 cat("END OF R SCRIPT EXECUTION\n")
 cat("================================================================================\n")
