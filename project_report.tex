@@ -1,3 +1,4 @@
+
 \documentclass[12pt,a4paper]{article}
 
 % ==============================================================================
@@ -31,6 +32,7 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{caption}
+\usepackage{float} % Added to strictly control table placement and prevent empty spaces
 \usepackage{hyperref}
 
 % Prevent LaTeX from stretching vertical space between blocks
@@ -55,12 +57,11 @@
 \captionsetup{
     font=small,
     labelfont=bf,
-    skip=6pt
+    skip=4pt
 }
 \renewcommand{\arraystretch}{1.2}
 \setlength{\tabcolsep}{8pt}
-\setlength{\intextsep}{10pt plus 2pt minus 2pt}
-\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}
 
 % Header & Footer Configuration
 \pagestyle{fancy}
@@ -76,12 +77,20 @@
 \titlespacing*{\paragraph}{0pt}{6pt plus 1pt minus 1pt}{1em}
 
 % Flush-left lists for symmetrical left/right visual padding
-\setlist[itemize]{leftmargin=*, topsep=3pt, itemsep=2pt, parsep=0pt}
-\setlist[enumerate]{leftmargin=*, topsep=3pt, itemsep=3pt, parsep=0pt}
+\setlist[itemize]{leftmargin=*, topsep=2pt, itemsep=2pt, parsep=0pt}
+\setlist[enumerate]{leftmargin=*, topsep=2pt, itemsep=2pt, parsep=0pt}
 
 % Paragraph Spacing
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.4em}
+\setlength{\parskip}{0.5em}
+
+% Fix excessive padding around math equations
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{6pt plus 2pt minus 2pt}
+  \setlength{\belowdisplayskip}{6pt plus 2pt minus 2pt}
+  \setlength{\abovedisplayshortskip}{0pt plus 2pt}
+  \setlength{\belowdisplayshortskip}{4pt plus 2pt minus 2pt}
+}
 
 \begin{document}
 
@@ -96,14 +105,17 @@
     \vspace{0.4cm}
     {\Large \textbf{Course Project Report}\par}
     \vspace{0.25cm}
+    {\Large \textbf{Group NO: 2}\par}
+    \vspace{0.25cm}
+    
     {\small \textbf{Dataset Reference:} \url{https://www.kaggle.com/code/desalegngeb/heart-disease-predictions/input}\par}
 
-    \vspace{0.5cm}
+    \vspace{0.4cm}
     \noindent\rule{\textwidth}{0.8pt}
-    \vspace{0.5cm}
+    \vspace{0.4cm}
 
     {\Large \textbf{Team Details}}\\[0.3cm]
-    \renewcommand{\arraystretch}{1.35}
+    \renewcommand{\arraystretch}{1.3}
     \noindent
     \begin{tabularx}{\textwidth}{@{}l L r@{}}
         \toprule
@@ -116,23 +128,22 @@
         \bottomrule
     \end{tabularx}
 
-    \vspace{0.7cm}
+    \vfill % Dynamically distributes empty space to prevent overflow
 
-    {\Large \textbf{Individual Contribution Towards the Project}}\\[0.15cm]
-    {\normalsize \textit{Equal Contribution (25\% Each) Across Code Implementation, Theory, and Reporting}}\\[0.3cm]
-    \renewcommand{\arraystretch}{1.35}
+    {\Large \textbf{Individual Contribution Towards the Project}}\\[0.3cm]
+    \renewcommand{\arraystretch}{1.3}
     \noindent
-    \begin{tabularx}{\textwidth}{|p{3.8cm}|L|}
+    \begin{tabularx}{\textwidth}{|p{3.6cm}|L|}
         \hline
-        \textbf{Team Member (Share)} & \textbf{Collaborative Responsibilities and Tasks} \\
+        \textbf{Team Member} & \textbf{Collaborative Responsibilities and Tasks} \\
         \hline
-        \textbf{Deepak Kag}\newline (25\% Equal Share) & Collaborative Base R coding of the Ordinary Least Squares (OLS) mathematical solver; theoretical formulation of linear regression assumptions; experimental analysis of resting blood pressure relationships. \\
+        \textbf{Deepak Kag} & Collaborative Base R coding of the Ordinary Least Squares (OLS) mathematical solver; theoretical formulation of linear regression assumptions; experimental analysis of resting blood pressure relationships. \\
         \hline
-        \textbf{Vineet Tiwari}\newline (25\% Equal Share) & Collaborative Base R coding of the dataset pre-processing and summary statistics functions; theoretical formulation of IQR outlier bounds; experimental analysis of serum cholesterol relationships. \\
+        \textbf{Vineet Tiwari} & Collaborative Base R coding of the dataset pre-processing and summary statistics functions; theoretical formulation of $\text{IQR}$ outlier bounds; experimental analysis of serum cholesterol relationships. \\
         \hline
-        \textbf{Rohan Dubey}\newline (25\% Equal Share) & Collaborative Base R coding of pairwise correlation and One-Way ANOVA hypothesis testing routines; theoretical formulation of inter-attribute variance; experimental analysis of chest pain type relationships. \\
+        \textbf{Rohan Dubey} & Collaborative Base R coding of pairwise correlation and One-Way ANOVA hypothesis testing routines; theoretical formulation of inter-attribute variance; experimental analysis of chest pain type relationships. \\
         \hline
-        \textbf{Ujjwal Singh}\newline (25\% Equal Share) & Collaborative Base R coding of the Linear Probability Model and risk prediction algorithms; theoretical formulation of $R^2$ goodness-of-fit diagnostics; experimental analysis of resting ECG relationships. \\
+        \textbf{Ujjwal Singh} & Collaborative Base R coding of the Linear Probability Model and risk prediction algorithms; theoretical formulation of $R^2$ goodness-of-fit diagnostics; experimental analysis of resting ECG relationships. \\
         \hline
     \end{tabularx}
 
@@ -293,7 +304,7 @@ The provided Cleveland dataset (\texttt{heart.csv}) was pre-processed through th
     \end{itemize}
 \end{itemize}
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Summary Statistics of the Four Selected Clinical Attributes ($N = 302$)}
     \label{tab:summary_stats}
@@ -313,7 +324,7 @@ The provided Cleveland dataset (\texttt{heart.csv}) was pre-processed through th
 \subsection{Relation Between Each Attribute}
 The pairwise Pearson correlation matrix computed from first principles is presented in Table~\ref{tab:corr_matrix}.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Pearson Correlation Matrix for the Four Selected Clinical Attributes}
     \label{tab:corr_matrix}
@@ -356,7 +367,7 @@ The synthesized Multiple Linear Regression (MLR) equation incorporating all four
 \paragraph{Evaluation on New Patient Profiles (Decision Threshold $\tau = 0.50$):}
 Three representative clinical cohorts were evaluated across the fitted SLR and MLR equations, as summarized in Table~\ref{tab:predictions}.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Predictions and Risk Classifications for New Patient Profiles}
     \label{tab:predictions}
@@ -386,7 +397,7 @@ Three representative clinical cohorts were evaluated across the fitted SLR and M
 \subsection{Calculation of \texorpdfstring{$R^2$}{R2} Values and Conclusions}
 Table~\ref{tab:goodness_of_fit} compares the goodness-of-fit and diagnostic metrics across all univariate and multivariate specifications.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Goodness-of-Fit and Diagnostic Metrics Across All Fitted Models}
     \label{tab:goodness_of_fit}
@@ -419,3 +430,5 @@ Table~\ref{tab:goodness_of_fit} compares the goodness-of-fit and diagnostic metr
 \end{enumerate}
 
 \end{document}
+
+```
